@@ -1,0 +1,42 @@
+<x-layout>
+  <div >
+      <header class="py-8 md:py-12">
+            <h1 class="text-3xl font-bold  "> Ideas </h1>
+            <p class="text-muted-foreground text-sm mt-2">Track your ideas and turn them into reality</p>
+      </header>
+      <div>
+          <a href="/ideas" class="btn {{request()->has('status')?"btn-outlined" : ''}}" >All</a>
+
+          @foreach(\App\IdeaStatus::cases() as $status)
+              <a href="/ideas?status={{$status->value}}"
+                 class="btn {{request('status')=== $status->value? '' : "btn-outlined"}}"
+              >{{$status->label()}}
+              <span class="text-xs text-red-500 ml-4">{{$statusCount->get($status->value)}}</span>
+
+              </a>
+
+          @endforeach
+{{--          <a href="/ideas?status=completed" class="btn {{request('status')=== 'completed'? '' : "btn-outlined"}}">Completed</a>--}}
+      </div>
+    <div class="mt-12 text-muted-foreground">
+        <div class="grid md:grid-cols-2 gap-6">
+            @forelse($ideas as $idea)
+         <x-card href="{{route('idea.show' , $idea)}}">
+             <h3 class="text-foreground text-lg">{{$idea->title}}</h3>
+             <div class="mt-2">
+                 <x-status-label status="{{$idea->status}}">{{$idea->status->label()}}</x-status-label>
+
+             </div>
+             <div class="mt-5 line-clamp-3">{{$idea->description}}</div>
+             <div class="mt-4">{{$idea->created_at->diffForHumans()}}</div>
+
+         </x-card>
+
+        @empty
+            <p class="text-muted-foreground ">No ideas yet. Create your first idea.</p>
+       @endforelse
+    </div>
+    </div>
+  </div>
+
+</x-layout>

@@ -2,17 +2,38 @@
 
 namespace App\Http\Controllers;
 
+use App\IdeaStatus;
 use App\Models\Idea;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class IdeaController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+
+        $ideas = Auth::user()->ideas()
+            ->when($request->status ,
+                fn($query , $status) => $query
+                    ->where('status' , $status))
+            ->get();
+//        SELECT status, COUNT(*)FROM ideas GROUP BY status
+        $counts = Auth::user()->ideas()->selectRaw('status , count(*) as count')
+            ->groupBy('status')->pluck('count' , 'status');
+
+
+        $statusCount =  collect(IdeaStatus::cases())->mapWithKeys(fn ($status)=>[
+            $status->value =>$counts->get($status->value , 0)
+        ])->put('all' , Auth::user()->ideas()->count());
+
+        return view('idea.index',
+        [
+            'ideas'=> $ideas,
+            'statusCount' => $statusCount,
+        ]);
     }
 
     /**

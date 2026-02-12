@@ -12,9 +12,10 @@ class Step extends Model
     use HasFactory;
 
     protected $attributes = [
-        'completed'=>false
+        'completed' => false,
     ];
-    public function idea():BelongsTo
+
+    public function idea(): BelongsTo
     {
         return $this->belongsTo(Idea::class);
     }

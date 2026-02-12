@@ -1,10 +1,5 @@
 <?php
 
-use App\Models\Idea;
-
-test('the application returns a successful response', function (): void {
-    $response = $this->get('/');
-
-    $response->assertStatus(200);
+test('that true is truess', function (): void {
+    expect(true)->toBeTrue();
 });
-

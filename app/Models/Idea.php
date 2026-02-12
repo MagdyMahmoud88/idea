@@ -8,19 +8,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class Idea extends Model
 {
     //
     use HasFactory;
-    protected $casts =[
-        'links' =>AsArrayObject::class,
-        'status' =>IdeaStatus::class,
-    ];
 
     protected $attributes = [
-        'status'=> IdeaStatus::Pending
+        'status' => IdeaStatus::Pending->value,
     ];
 
     public function user(): BelongsTo
@@ -28,7 +23,16 @@ class Idea extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function steps(): HasMany {
+    public function steps(): HasMany
+    {
         return $this->hasMany(Step::class);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'links' => AsArrayObject::class,
+            'status' => IdeaStatus::class,
+        ];
     }
 }

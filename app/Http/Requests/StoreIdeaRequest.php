@@ -12,6 +12,7 @@ class StoreIdeaRequest extends FormRequest
     public function authorize(): bool
     {
         return false;
+        // or return true; if policy/gate is checked elsewhere
     }
 
     /**
